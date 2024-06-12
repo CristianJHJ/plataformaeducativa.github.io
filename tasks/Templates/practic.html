@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proyecto Nutrición</title>
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="https://i.imgur.com/ynaxQQu.jpeg"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+    />
+  
+    <style>
+      .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px; /* Espacio entre los botones */
+        }
+      .btn-custom {
+    width: 100px; /* Ancho máximo */
+    height: 100px; /* Alto máximo */
+    max-width: 150px;
+    max-height: 150px;
+    min-width: 50px;
+    min-height: 50px;
+    background-size: cover;
+    background-position: center;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-start {
+    background-image: url('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F9%2FRed-Start-Button-PNG-Free-Image.png&f=1&nofb=1&ipt=88fb24c22d48053e3d6748d903800efc1366d57bff1f4b86939e3fb955b230d1&ipo=images');
+}
+
+.btn-stop {
+    background-image: url('https://www.clker.com/cliparts/6/g/V/Z/v/2/stop-button-red-hi.png');
+}
+
+/* Hacer que los botones sean responsivos */
+@media (max-width: 600px) {
+    .btn-custom {
+        width: 50px;
+        height: 50px;
+    }
+}
+      .hidden {
+    display: none !important;
+}
+      .main-content {
+        color: black;
+        text-align: center;
+        font-family: "Arial", sans-serif;
+      }
+
+      .main-content h1 {
+        font-size: 3.5rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+      }
+
+      .main-content p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+      }
+
+      /*.btn-primary {
+        background-color: #28a745;
+        border-color: #28a745;
+        font-size: 1.2rem;
+        padding: 0.75rem 2rem;
+        background-image: url("https://icon-library.com/images/start-button-icon-png/start-button-icon-png-13.jpg");
+        background-size: cover;
+        background-position: center;
+      }*/
+
+      .btn-print {
+        background-color: #28a745;
+        border-color: #28a745;
+        font-size: 1.2rem;
+        padding: 0.75rem 2rem;
+        background-image: url("https://icons.iconarchive.com/icons/designbolts/free-multimedia/1024/Printer-icon.png");
+        background-size: cover;
+        background-position: center;
+      }
+
+     /* .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        font-size: 1.2rem;
+        padding: 0.75rem 2rem;
+        background-image: url("https://pngimg.com/uploads/sign_stop/sign_stop_PNG25628.png");
+        background-size: cover;
+        background-position: center;
+      }*/
+
+      .card-section {
+        background-color: #f2f2f2;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 1);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .animate-opacity {
+        opacity: 1;
+        transition: opacity 1s ease-in-out;
+      }
+
+      .animate-opacity.hide {
+        opacity: 0;
+      }
+      .card-header {
+        background-color: #f2f2f2;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+
+      .card-title {
+        display: inline;
+        margin-left: 10px;
+      }
+
+      .icon {
+        width: 30px; /* Tamaño del icono */
+        height: auto; /* Altura automática para mantener la proporción */
+        vertical-align: middle; /* Alineación vertical con el texto */
+      }
+      .card-title-small {
+        font-size: 1rem; /* Tamaño pequeño del título */
+      }
+
+      .card-title-medium {
+        font-size: 1.5rem; /* Tamaño mediano del título */
+      }
+
+      .card-title-large {
+        font-size: 2rem; /* Tamaño grande del título */
+      }
+      .card {
+        transition: transform 0.3s ease; /* Transición suave de 0.3 segundos */
+      }
+
+      .inner-card:hover {
+        transform: scale(1.05);
+      }
+      a {
+        text-decoration: none;
+        color: black;
+      }
+      .exercise-title {
+        font-size: 2rem; /* Tamaño del texto */
+        font-weight: bold; /* Negrita */
+        color: #333; /* Color del texto */
+        margin-bottom: 20px; /* Espacio inferior */
+        text-transform: uppercase; /* Convertir texto a mayúsculas */
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      window.onload = function () {
+        var signInForm = document.getElementById("singin-form");
+        signInForm.classList.add("fade-in-active");
+      };
+
+      setTimeout(function () {
+        var errorMessage = document.getElementById("error-message");
+        if (errorMessage) {
+          errorMessage.style.display = "none";
+        }
+      }, 5000);
+
+      document.addEventListener("DOMContentLoaded", function () {
+        var paragraphs = document.querySelectorAll(".main-content p");
+
+        function isInViewport(element) {
+          var rect = element.getBoundingClientRect();
+          return (
+            rect.top <= window.innerHeight / 2 &&
+            rect.bottom >= window.innerHeight / 2
+          );
+        }
+
+        function toggleVisibility() {
+          paragraphs.forEach(function (paragraph, index) {
+            if (isInViewport(paragraph)) {
+              paragraph.classList.remove("hide");
+            } else {
+              // Oculta el párrafo si no está en la mitad de la pantalla
+              paragraph.classList.add("hide");
+            }
+          });
+        }
+
+        toggleVisibility();
+
+        window.addEventListener("scroll", toggleVisibility);
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const video = document.getElementById("videoContainer");
+        const startBtn = document.getElementById("start-btn");
+        const stopBtn = document.getElementById("stop-btn");
+        let mediaRecorder;
+        let chunks = [];
+
+        startBtn.addEventListener("click", startRecording);
+        stopBtn.addEventListener("click", stopRecording);
+
+        navigator.mediaDevices
+          .getUserMedia({ video: true })
+          .then(function (stream) {
+            video.srcObject = stream;
+          })
+          .catch(function (error) {
+            console.error("Error al acceder a la cámara:", error);
+          });
+
+        function startRecording() {
+          chunks = [];
+          mediaRecorder = new MediaRecorder(video.srcObject);
+          mediaRecorder.ondataavailable = function (event) {
+            chunks.push(event.data);
+          };
+          mediaRecorder.onstop = function () {
+            const blob = new Blob(chunks, { type: "video/webm" });
+            const formData = new FormData();
+            formData.append("video", blob, "grabacion.webm");
+            fetch("/guardar_video/", {
+              method: "POST",
+              body: formData,
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error("Error al guardar el video.");
+                }
+                console.log(response); // Mostrar la respuesta en la consola
+                // Mostrar la ventana emergente de felicitación y motivación
+                $("#successModal").modal("show");
+                var audio = document.getElementById('successAudio');
+        audio.play()
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+              });
+          };
+
+          mediaRecorder.start();
+          startBtn.disabled = true;
+          stopBtn.disabled = false;
+
+          // Iniciar la clasificación
+          classify();
+
+          setTimeout(stopRecording, 10000); // Detener la grabación después de 10 segundos
+        }
+
+        function stopRecording() {
+          mediaRecorder.stop();
+          startBtn.disabled = false;
+          stopBtn.disabled = true;
+
+          downloadResults();
+
+          const blob = new Blob(chunks, { type: "video/webm" });
+          const formData = new FormData();
+          formData.append("video", blob, "grabacion.webm");
+          fetch("/guardar_video/", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error al guardar el video.");
+              }
+              console.log(response); // Mostrar la respuesta en la consola
+              // Mostrar la ventana emergente de felicitación y motivación
+              $("#successModal").modal("show");
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        }
+        function downloadResults() {
+            //download("A.txt", JSON.stringify(storeData.dataA));
+              //download("B.txt", JSON.stringify(storeData.dataB));
+              const jsonString = JSON.stringify(storeData.result);
+              console.log("json: ", jsonString);
+              const dataArray = JSON.parse(jsonString);
+              // Calcular el promedio de 'result'
+              let sum = 0;
+              let count = 0;
+              
+              dataArray.forEach(item => {
+                    // Convertir 'result' a número y sumarlo
+                        sum += Number(item.confidenceA);
+                            count += 1;
+                          });
+                          // Calcular el promedio
+                          const average = sum / count;
+                          // Guardar el resultado en una variable
+                          let promedio = average;
+                          let resultado = "Tu calificación es: "+promedio;
+                          console.log("promedio: ",resultado);
+                //download("result.txt", JSON.stringify(storeData.result));
+                download("result.txt", resultado);
+                  //knnClassifier.save();
+}
+
+      });
+    </script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    .gradient-bg {
+      background: linear-gradient(45deg, #6db3f2, #1e69de);
+      color: white;
+    }
+    .card-section {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+  </head>
+  <body>
+    {% extends 'base.html' %} {% block content %}
+
+    <!-- <main class="container py-5 gradient-bg main-content">
+      <section class="card card-body card-section fade-in" id="singin-form">
+        <div class="text-center mb-5">
+          <h1 class="display-1">Programas de ejercicios</h1>
+        </div>
+        <div class="exercise-title"></div>
+
+        <form id="video-form" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="video-container">
+            <video id="video-preview" autoplay></video>
+          </div>
+
+          <div class="col-md-12">
+
+            <button class="btn btn-primary" id="start-btn">Iniciar</button>
+            <button class="btn btn-danger" id="stop-btn" disabled>
+              Detener
+            </button>
+          </div>
+        </form>
+      </section>
+    </main> -->
+
+    {% load static %}
+      <script  src="{% static "js/p5.min.js" %}"></script>
+      <script src="{% static "js/p5.dom.min.js" %}"></script>
+      <script src="{% static "js/ml5.min.js" %}" type="text/javascript"></script>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const exerciseTitleElement = document.querySelector(".exercise-title");
+          const gifElement = document.getElementById("exercise-gif");
+          const urlParams = new URLSearchParams(window.location.search);
+          const exerciseTitle = urlParams.get("exercise_title");
+
+          if (exerciseTitle) {
+            exerciseTitleElement.textContent = exerciseTitle;
+
+            let gifSrc;
+            console.log("text: ", exerciseTitle.toUpperCase());
+            switch (exerciseTitle.toUpperCase()) {
+              //dorsolumbar
+              case "DORSOLUMBAR 1":
+                contador = 1;
+                gifSrc = "{% static 'img/columna/dorsolumbar1.gif' %}";
+                break;
+              case "DORSOLUMBAR 2":
+                gifSrc = "{% static 'img/columna/dorsolumbar2.gif' %}";
+                break;
+              case "DORSOLUMBAR 3":
+                gifSrc = "{% static 'img/columna/dorsolumbar3.gif' %}";
+                break;
+              case "DORSOLUMBAR 4":
+                gifSrc = "{% static 'img/columna/dorsolumbar4.gif' %}";
+                break;
+              case "DORSOLUMBAR 5":
+                gifSrc = "{% static 'img/columna/dorsolumbar5.gif' %}";
+                break;
+
+                //brazo
+              case "BRAZOS ALAS":
+                gifSrc = "{% static 'img/brazo/brazos alas.gif' %}";
+                break;
+              case "BRAZOS ARRIBA":
+                gifSrc = "{% static 'img/brazo/brazos arriba.gif' %}";
+                break;
+              case "BRAZOS CRUZADOS":
+                gifSrc = "{% static 'img/brazo/brazos cruzados.gif' %}";
+                break;
+              case "BRAZOS ESTIRADOS":
+                gifSrc = "{% static 'img/brazo/brazos estirados.gif' %}";
+                break;
+              case "EJERCICIO 7":
+                gifSrc = "{% static 'img/brazo/ejercicio7.gif' %}";
+                break;
+              case "EJERCICIO 8":
+                gifSrc = "{% static 'img/brazo/ejercicio8.gif' %}";
+                break;
+              
+              //estiramiento
+              case "ESTIRAMIENTO 1":
+                gifSrc = "{% static 'img/estiramiento/estiramiento1.gif' %}";
+                break;
+              case "ESTIRAMIENTO 2":
+                gifSrc = "{% static 'img/estiramiento/estiramiento de rodilla y brazos ej1.gif' %}";
+                break;
+              case "ESTIRAMIENTO 3":
+                gifSrc = "{% static 'img/estiramiento/estiramiento hombro.gif' %}";
+                break;
+              case "ESTIRAMINETO 4":
+                gifSrc = "{% static 'img/estiramiento/estiramineto  lateral.gif' %}";
+                break;
+              case "ESTIRAMIENTO 5":
+                gifSrc = "{% static 'img/estiramiento/flexion de cuello lateral.gif' %}";
+                break;
+
+              //hombro
+              case "ABDUCCION HOMBRO":
+                gifSrc = "{% static 'img/hombro/abduccion hombro.gif' %}";
+                break;
+              case "EJERCICIO 2":
+                gifSrc = "{% static 'img/hombro/flexion de hombro.gif' %}";
+                break;
+              case "EJERCICIO 3":
+                gifSrc = "{% static 'img/hombro/hombro compresionlateral.gif' %}";
+                break;
+              case "HOMBRO":
+                gifSrc = "{% static 'img/hombro/hombro.gif' %}";
+                break;
+              case "HOMBROS ATRAS":
+                gifSrc = "{% static 'img/hombro/hombrso atras.gif' %}";
+                break;
+                //hombro-codo
+              //pierna
+              case "PIERNA 1":
+                gifSrc = "{% static 'img/pierna/ejercicio2.gif' %}";
+                break;
+              case "PIERNA 2":
+                gifSrc = "{% static 'img/pierna/ejercicio3.gif' %}";
+                break;
+              case "PIERNA 3":
+                gifSrc = "{% static 'img/pierna/ejercicio4.gif' %}";
+                break;
+              case "PIERNA 4":
+                gifSrc = "{% static 'img/pierna/ejercicio5.gif' %}";
+                break;
+              case "PIERNA 5":
+                gifSrc = "{% static 'img/pierna/ejercicio6.gif' %}";
+                break;
+             //Hombro-codo
+              case "HOMBRO CODO 1":
+                gifSrc = "{% static 'img/hombro_codo/hombrocodo1.gif' %}";
+                break;
+              case "HOMBRO CODO 2":
+                gifSrc = "{% static 'img/hombro_codo/hombrocodo2.gif' %}";
+                break;
+              case "HOMBRO CODO 3":
+                gifSrc = "{% static 'img/hombro_codo/hombrocodo3.gif' %}";
+                break;
+              case "HOMBRO CODO 4":
+                gifSrc = "{% static 'img/hombro_codo/hombrocodo4.gif' %}";
+                break;
+              default:
+                gifSrc = "{% static 'img/pierna.gif' %}";
+            }
+            gifElement.src = gifSrc;
+          }
+        });
+</script>
+
+    <main class="container py-5  main-content">
+    <section class="card card-body card-section fade-in" id="singin-form">
+      <div class="text-center mb-5">
+        <h1 class="display-1">Programas de Ejercicios</h1>
+      </div>
+      <div class="exercise-title mb-4"></div>
+        <div class="mb-3" hidden>
+        <label for="strokeWeight" class="form-label">Stroke Weight</label>
+        <input type="number" id="strokeWeight" class="form-control" placeholder="Stroke Weight" value="8">
+      </div>
+      <div class="mb-4" hidden>
+        <label for="strokeLineColor" class="form-label">Stroke Line Color (hex)</label>
+        <input type="color" id="strokeLineColor" class="form-control" placeholder="#FF0000" value="#00000">
+      </div>
+       <div class="row align-items-center">
+  <div class="col-md-9 text-center" id="videoContainer"></div>
+  <div class="col-md-3 d-flex justify-content-center align-items-center gif-container">
+  <img src="{% static 'img/pierna.gif' %}" alt="GIF" class="img-fluid" id="exercise-gif">
+</div>
+</div>
+
+ <div class="button-container">
+        <button class="btn-custom btn-start" id="start-btn"></button>
+        <button class="btn-custom btn-stop hidden" id="stop-btn" disabled></button>
+    </div>
+
+
+ <div class="hidden">
+    <button id="addClassA" class="hidden">Add an Example to Class A</button>
+    <button id="resetA" class="hidden">Reset Class A</button>
+</div>
+
+<p class="text-center" hidden><span id="exampleA" class="badge bg-primary">0</span> A examples</p>
+<p class="text-center" hidden>| Confidence in A is: <span id="confidenceA" class="badge bg-success">0</span></p>
+
+<div class="d-flex justify-content-center mb-4" hidden>
+    <button id="addClassB" class="btn btn-primary me-2 hidden">Add an Example to Class B</button>
+    <button id="resetB" class="btn btn-danger hidden">Reset Class B</button>
+</div>
+
+<p class="text-center" hidden><span id="exampleB" class="badge bg-primary">0</span> B examples</p>
+<p class="text-center" hidden>| Confidence in B is: <span id="confidenceB" class="badge bg-success">0</span></p>
+
+<div class="d-flex justify-content-center mb-4" hidden>
+    <button id="buttonPredict" class="btn btn-warning me-2 hidden">Start predicting!</button>
+    <button id="downloadAndClear" class="btn btn-success me-2 hidden">Download files</button>
+    <button id="clearAll" class="btn btn-secondary hidden">Clear all classes</button>
+</div>
+
+<p class="text-center" hidden>
+    KNN Classifier with mobileNet model labeled this as Class:
+    <span id="result" class="badge bg-info">...</span> with a confidence of
+    <span id="confidence" class="badge bg-info">...</span>
+</p>
+
+
+      {% load static %}
+<script>
+  let contador =0;
+    const exerciseTitleElement = document.querySelector(".exercise-title");
+          const gifElement = document.getElementById("exercise-gif");
+          const urlParams = new URLSearchParams(window.location.search);
+          const exerciseTitle = urlParams.get("exercise_title");
+
+          if (exerciseTitle) {
+            exerciseTitleElement.textContent = exerciseTitle;
+
+            let gifSrc;
+            console.log("text: ", exerciseTitle.toUpperCase());
+            switch (exerciseTitle.toUpperCase()) {
+              //dorsolumbar
+              case "DORSOLUMBAR 1":
+                contador = 1;
+                break;
+              case "DORSOLUMBAR 2":
+                contador = 2;
+                break;
+              case "DORSOLUMBAR 3":
+                contador = 3;
+                break;
+              case "DORSOLUMBAR 4":
+                contador = 4;
+                break;
+              case "DORSOLUMBAR 5":
+                contador = 5;
+                break;
+
+                //brazo
+              case "BRAZOS ALAS":
+                contador = 6;
+                break;
+              case "BRAZOS ARRIBA":
+                contador = 7;
+                break;
+              case "BRAZOS CRUZADOS":
+                contador = 8;
+                break;
+              case "BRAZOS ESTIRADOS":
+                contador = 9;
+                break;
+              case "EJERCICIO 7":
+                contador = 10;
+                break;
+              case "EJERCICIO 8":
+                contador = 11;
+                break;
+              
+              //estiramiento
+              case "ESTIRAMIENTO 1":
+                contador = 12;
+                break;
+              case "ESTIRAMIENTO 2":
+                contador = 13;
+                break;
+              case "ESTIRAMIENTO 3":
+                contador = 14;
+                break;
+              case "ESTIRAMINETO 4":
+                contador = 15;
+                break;
+              case "ESTIRAMIENTO 5":
+                contador = 16;
+                break;
+
+              //hombro
+              case "ABDUCCION HOMBRO":
+                contador = 17;
+                break;
+              case "EJERCICIO 2":
+                contador = 18;
+                break;
+              case "EJERCICIO 3":
+                contador = 19;
+                break;
+              case "HOMBRO":
+                contador = 20;
+                break;
+              case "HOMBROS ATRAS":
+                contador = 21;
+                break;
+                //hombro-codo
+              //pierna
+              case "PIERNA 1":
+                contador = 22;
+                break;
+              case "PIERNA 2":
+                contador = 23;
+                break;
+              case "PIERNA 3":
+                contador = 24;
+                break;
+              case "PIERNA 4":
+                contador = 25;
+                break;
+              case "PIERNA 5":
+                contador = 26;
+                break;
+             //Hombro-codo
+              case "HOMBRO CODO 1":
+                contador = 27;
+                break;
+              case "HOMBRO CODO 2":
+                contador = 28;
+                break;
+              case "HOMBRO CODO 3":
+                contador = 29;
+                break;
+              case "HOMBRO CODO 4":
+                contador = 30;
+                break;
+              default:
+                contador = 0;
+            }
+          }
+  console.log("contador: ", contador);
+  let video;
+  // Create a KNN classifier
+  const knnClassifier = ml5.KNNClassifier();
+  let poseNet;
+  let poses = [];
+  var strokeWeightElement = document.getElementById("strokeWeight");
+  var strokeLineColor = document.getElementById("strokeLineColor");
+  var storeData = {
+      dataA: [],
+        dataB: [],
+          result: [],
+        };
+        function setup() {
+  const canvas = createCanvas(640, 480);
+  canvas.parent("videoContainer");
+  video = createCapture(VIDEO);
+  video.size(width, height);
+
+  // Create the UI buttons
+  createButtons();
+
+  // Create a new poseNet method with a single detection
+  poseNet = ml5.poseNet(video, modelReady);
+  // This sets up an event that fills the global variable "poses"
+  // with an array every time new poses are detected
+  poseNet.on("pose", function (results) {
+    poses = results;
+  });
+  
+  console.log("poses: ",poses)
+  // Hide the video element, and just show the canvas
+  video.hide();}
+  function draw() {
+  image(video, 0, 0, width, height);
+
+  // We can call both functions to draw all keypoints and the skeletons
+  drawKeypoints();
+  drawSkeleton();}
+  var jsonUrl = "";
+  switch(contador){
+    case 1:
+      jsonUrl = "{% static 'json/dorsolumbar/dorsolumbar1/myKNN.json' %}";
+      break;
+    case 2:
+      jsonUrl = "{% static 'json/dorsolumbar/dorsolumbar2/myKNN.json' %}";
+      break;
+    case 3:
+      jsonUrl = "{% static 'json/dorsolumbar/dorsolumbar3/myKNN.json' %}";
+      break;
+    case 4:
+      jsonUrl = "{% static 'json/dorsolumbar/dorsolumbar4/myKNN.json' %}";
+      break;
+    case 5:
+      jsonUrl = "{% static 'json/dorsolumbar/dorsolumbar5/myKNN.json' %}";
+      break;
+    case 6:
+      jsonUrl = "{% static 'json/brazos/brazosalas.json' %}";
+      break;
+    case 7:
+      jsonUrl = "{% static 'json/brazos/brazosarriba.json' %}";
+      break;
+    case 8:
+      jsonUrl = "{% static 'json/brazos/brazoscruzados.json' %}";
+      break;
+    case 9:
+      jsonUrl = "{% static 'json/brazos/brazosestirados.json' %}";
+      break;
+    case 10:
+      jsonUrl = "{% static 'json/brazos/ejercicio7.json' %}";
+      break;
+    case 11:
+      jsonUrl = "{% static 'json/brazos/ejercicio8.json' %}";
+      break;
+    //estiramiento  
+    case 12:
+      jsonUrl = "{% static 'json/estiramiento/estiramiento1/myKNN.json' %}";
+      break;
+    case 13:
+      jsonUrl = "{% static 'json/estiramiento/estiramiento2/myKNN.json' %}";
+      break;
+    case 14:
+      jsonUrl = "{% static 'json/estiramiento/estiramiento3/myKNN.json' %}";
+      break;
+    case 15:
+      jsonUrl = "{% static 'json/estiramiento/estiramiento4/myKNN.json' %}";
+      break;
+    case 16:
+      jsonUrl = "{% static 'json/estiramiento/estiramiento5/myKNN.json' %}";
+      break;
+    //hombros
+    case 17:
+      jsonUrl = "{% static 'json/hombros/abduccionhombro/myKNN.json' %}";
+      break;
+    case 18:
+      jsonUrl = "{% static 'json/hombros/flexionhombro/myKNN.json' %}";
+      break;
+    case 19:
+      jsonUrl = "{% static 'json/hombros/hombrocompresionlateral/myKNN.json' %}";
+      break;
+    case 20:
+      jsonUrl = "{% static 'json/hombros/hombro/myKNN.json' %}";
+      break;
+    case 21:
+      jsonUrl = "{% static 'json/hombros/hombrsoatras/myKNN.json' %}";
+      break;
+    //pierna
+    case 22:
+      jsonUrl = "{% static 'json/piernas/ejercicio2/myKNN.json' %}";
+      break;
+    case 23:
+      jsonUrl = "{% static 'json/piernas/ejercicio3/myKNN.json' %}";
+      break;
+    case 24:
+      jsonUrl = "{% static 'json/piernas/ejercicio4/myKNN.json' %}";
+      break;
+    case 25:
+      jsonUrl = "{% static 'json/piernas/ejercicio5/myKNN.json' %}";
+      break;
+    case 26:
+      jsonUrl = "{% static 'json/piernas/ejercicio6/myKNN.json' %}";
+      break;
+    //hombro-codo
+    case 27:
+      jsonUrl = "{% static 'json/hombro-codo/hombrocodo1/myKNN.json' %}";
+      break;
+    case 28:
+      jsonUrl = "{% static 'json/hombro-codo/hombrocodo2/myKNN.json' %}";
+      break;
+    case 29:
+      jsonUrl = "{% static 'json/hombro-codo/hombrocodo3/myKNN.json' %}";
+      break;
+    case 30:
+      jsonUrl = "{% static 'json/hombro-codo/hombrocodo4/myKNN.json' %}";
+      break;
+    default:
+     jsonUrl = "{% static 'js/result/myKNN.json' %}";
+  }
+  
+  function customModalReady() {
+  console.log("customModalReady");}
+    function modelReady() {
+    //select("#status").html("model Loaded");
+    knnClassifier.load(jsonUrl)
+      .then(() => {
+        console.log("JSON loaded successfully con la ruta", jsonUrl);
+      })
+      .catch(error => {
+        console.error("Error loading JSON:", error);
+      });
+  }
+
+function download(filename, text) {
+  var element = document.createElement("a");
+  element.setAttribute(
+    "href",
+    "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+  );
+  element.setAttribute("download", filename);
+
+  element.style.display = "none";
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+// Add the current frame from the video to the classifier
+// Add the current frame from the video to the classifier
+function addExample(label) {
+  if (poses.length === 0 || !poses[0].pose) {
+    console.error("No poses detected");
+    return;
+  }
+
+  // Convert poses results to a 2d array [[score0, x0, y0],...,[score16, x16, y16]]
+  const poseArray = poses[0].pose.keypoints.map((p) => [
+    p.score,
+    p.position.x,
+    p.position.y,
+  ]);
+  storeData[`data${label}`].push({ pose: poseArray });
+
+  // Add an example with a label to the classifier
+  knnClassifier.addExample(poseArray, label);
+  updateCounts();
+}
+
+
+// Predict the current frame.
+function classify() {
+  // Get the total number of labels from knnClassifier
+  const numLabels = knnClassifier.getNumLabels();
+  if (numLabels <= 0) {
+    console.error("There is no examples in any label");
+    return;
+  }
+  if (poses.length === 0 || !poses[0].pose) {
+    console.error("No poses detected");
+    return;
+  }
+
+  // Convert poses results to a 2d array [[score0, x0, y0],...,[score16, x16, y16]]
+  const poseArray = poses[0].pose.keypoints.map((p) => [
+    p.score,
+    p.position.x,
+    p.position.y,
+  ]);
+
+  // Use knnClassifier to classify which label do these features belong to
+  // You can pass in a callback function `gotResults` to knnClassifier.classify function
+  knnClassifier.classify(poseArray, gotResults);
+}
+
+// A util function to create UI buttons
+function createButtons() {
+  // When the A button is pressed, add the current frame
+  // from the video with a label of "A" to the classifier
+  buttonA = select("#addClassA");
+  buttonA.mousePressed(function () {
+    addExample('A');
+  });
+
+  // When the B button is pressed, add the current frame
+  // from the video with a label of "B" to the classifier
+  buttonB = select("#addClassB");
+  buttonB.mousePressed(function () {
+    addExample('B');
+  });
+
+  // Reset buttons
+  resetBtnA = select("#resetA");
+  resetBtnA.mousePressed(function () {
+    clearLabel("A");
+  });
+
+  resetBtnB = select("#resetB");
+  resetBtnB.mousePressed(function () {
+    clearLabel("B");
+  });
+
+  // Predict button
+  buttonPredict = select("#buttonPredict");
+  buttonPredict.mousePressed(classify);
+
+  // Clear all classes button
+  buttonClearAll = select("#clearAll");
+  buttonClearAll.mousePressed(clearAllLabels);
+
+  // downloadAndClear
+
+  downloadAndClear = select("#downloadAndClear");
+  downloadAndClear.mousePressed(downloadAndClearHandler);
+}
+function downloadAndClearHandler() {
+  download("A.txt", JSON.stringify(storeData.dataA));
+  download("B.txt", JSON.stringify(storeData.dataB));
+  download("result.txt", JSON.stringify(storeData.result));
+  knnClassifier.save();
+}
+// Show the results
+function gotResults(err, result) {
+  // Display any error
+  if (err) {
+    console.error(err);
+  }
+
+  if (result.confidencesByLabel) {
+    let resultStoreData = {
+      result: "",
+      confidence: 0,
+      confidenceA: 0,
+      confidenceB: 0,
+    };
+    const confidences = result.confidencesByLabel;
+    // result.label is the label that has the highest confidence
+    if (result.label) {
+      select("#result").html(result.label);
+      select("#confidence").html(`${confidences[result.label] * 100} %`);
+      resultStoreData.result = result.label;
+      resultStoreData.confidence = confidences[result.label] * 100;
+    }
+
+    select("#confidenceA").html(
+      `${confidences["A"] ? confidences["A"] * 100 : 0} %`
+    );
+
+    select("#confidenceB").html(
+      `${confidences["B"] ? confidences["B"] * 100 : 0} %`
+    );
+    resultStoreData.confidenceA = confidences["A"] ? confidences["A"] * 100 : 0;
+    resultStoreData.confidenceB = confidences["B"] ? confidences["B"] * 100 : 0;
+    storeData.result.push(resultStoreData);
+  }
+  classify();
+}
+
+// Update the example count for each label
+function updateCounts() {
+  const counts = knnClassifier.getCountByLabel();
+
+  select("#exampleA").html(counts["A"] || 0);
+  select("#exampleB").html(counts["B"] || 0);
+}
+
+// Clear the examples in one label
+function clearLabel(classLabel) {
+  storeData[`data${classLabel}`] = [];
+  knnClassifier.clearLabel(classLabel);
+  updateCounts();
+}
+
+// Clear all the examples in all labels
+function clearAllLabels() {
+  storeData = {
+    dataA: [],
+    dataB: [],
+    result: [],
+  };
+  knnClassifier.clearAllLabels();
+  updateCounts();
+}
+
+// A function to draw ellipses over the detected keypoints
+function drawKeypoints() {
+  // Loop through all the poses detected
+  for (let i = 0; i < poses.length; i++) {
+    // For each pose detected, loop through all the keypoints
+    let pose = poses[i].pose;
+    for (let j = 0; j < pose.keypoints.length; j++) {
+      // A keypoint is an object describing a body part (like rightArm or leftShoulder)
+      let keypoint = pose.keypoints[j];
+      // Only draw an ellipse is the pose probability is bigger than 0.2
+      if (keypoint.score > 0.2) {
+        fill(255, 0, 0);
+        noStroke();
+        ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
+      }
+    }
+  }
+}
+
+const hexToRgb = (hex) => {
+  try {
+    return hex
+      .replace(
+        /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
+        (m, r, g, b) => "#" + r + r + g + g + b + b
+      )
+      .substring(1)
+      .match(/.{2}/g)
+      .map((x) => parseInt(x, 16));
+  } catch (error) {
+    return [0, 51, 255];
+  }
+};
+
+// A function to draw the skeletons
+function drawSkeleton() {
+  // Loop through all the skeletons detected
+
+  for (let i = 0; i < poses.length; i++) {
+    let skeleton = poses[i].skeleton;
+    // For every skeleton, loop through all body connections
+    for (let j = 0; j < skeleton.length; j++) {
+      let partA = skeleton[j][0];
+      let partB = skeleton[j][1];
+      stroke(...hexToRgb(strokeLineColor?.value));
+      strokeWeight(+strokeWeightElement?.value || 4);
+      line(
+        partA.position.x,
+        partA.position.y,
+        partB.position.x,
+        partB.position.y
+      );
+    }
+  }
+}
+</script>
+<!--<script>
+  var timestamp = new Date().getTime();
+  var script = document.createElement('script');
+  script.src = "{% static 'js/sketch.js' %}?v=" + timestamp;
+  document.head.appendChild(script);
+</script> -->
+
+
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Ventana emergente de felicitación y motivación -->
+    <div
+      class="modal fade"
+      id="successModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              ¡Grabación Exitosa!
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>¡Felicidades! Has completado la grabación satisfactoriamente.</p>
+            <p>¡Sigue así y nunca te rindas!</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-print hidden" data-bs-dismiss="modal">
+              Imprimir resultados
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <audio id="successAudio" type="hidden" src="{% static 'mp3/final.mp3' %}" preload="auto"></audio>
+
+    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
