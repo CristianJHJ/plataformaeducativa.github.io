@@ -48,7 +48,3 @@ class Task(models.Model):
 
 
 
-
-
-
-
